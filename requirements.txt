@@ -1,14 +1,25 @@
 streamlit>=1.35.0
 pymupdf>=1.24.0
 python-docx>=1.1.0
-spacy>=3.7.0
+numpy<2.0
+spacy>=3.7.0,<3.8.0
 scikit-learn>=1.4.0
 pandas>=2.2.0
 plotly>=5.20.0
 reportlab>=4.0.0
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
 
-# NOTE: the line above installs the spaCy English model directly as a pip
+# NOTE: numpy is pinned below 2.0 because spaCy's "thinc" dependency ships
+# precompiled Cython extensions built against numpy 1.x's internal memory
+# layout. numpy 2.0 changed that layout, causing a
+# "ValueError: numpy.dtype size changed, may indicate binary incompatibility"
+# crash at import time. This is a known, widely-reported spaCy/thinc issue.
+#
+# spacy is also pinned below 3.8.0 to match the en_core_web_sm 3.7.1 model
+# wheel above (a spaCy model's major.minor version must match the spaCy
+# version that loads it).
+#
+# The line below installs the spaCy English model directly as a pip
 # package. This is required for cloud deployment (Streamlit Community Cloud
 # only installs from this file - it won't run "python -m spacy download").
 # For LOCAL development, you can alternatively just run:
